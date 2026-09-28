@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 extension Navigation on BuildContext {
   Future<dynamic> pushNamed(String routeName, {Object? arguments}) {
@@ -22,4 +22,18 @@ extension Navigation on BuildContext {
   }
 
   void pop() => Navigator.of(this).pop();
+}
+
+extension Feedback on BuildContext {
+  void showSnackBar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(this)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message, style: const TextStyle(color: Colors.white)),
+          backgroundColor: isError ? Colors.red : Colors.green,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+  }
 }

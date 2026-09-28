@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:simple_chat_app/app.dart';
 
+import 'helpers/fake_firebase.dart';
+
 void main() {
   Future<void> pumpApp(WidgetTester tester) async {
     tester.view.physicalSize = const Size(1206, 2622);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(const SimpleChatApp());
+    final firebase = FakeFirebase();
+    await tester.pumpWidget(SimpleChatApp(auth: firebase.auth));
     await tester.pumpAndSettle();
   }
 
@@ -77,9 +80,7 @@ void main() {
     expect(passwordField().obscureText, isTrue);
   });
 
-  testWidgets('an unknown route shows the not-found page', (
-    tester,
-  ) async {
+  testWidgets('an unknown route shows the not-found page', (tester) async {
     await pumpApp(tester);
 
     tester

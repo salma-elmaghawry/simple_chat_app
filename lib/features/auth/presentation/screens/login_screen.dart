@@ -29,6 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  // Login logic comes in the next session. For now the button only
+  // validates the form.
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
     FocusScope.of(context).unfocus();
@@ -42,7 +44,8 @@ class _LoginScreenState extends State<LoginScreen> {
       key: _formKey,
       child: AuthLayout(
         title: 'Hello, Welcome Back',
-        subtitle: 'Happy to see you again, to use your account please login first.',
+        subtitle:
+            'Happy to see you again, to use your account please login first.',
         illustrationTop: 39,
         headerGap: 55,
         children: [
@@ -67,20 +70,21 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: EdgeInsets.only(top: 23.2.h),
             child: Align(
               alignment: AlignmentDirectional.centerEnd,
-              child: Text(
-                'Forgot Password',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.secondary,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {},
+                child: Text(
+                  'Forgot Password',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.secondary,
+                  ),
                 ),
               ),
             ),
           ),
           Padding(
             padding: EdgeInsets.only(top: 45.8.h),
-            child: PrimaryButton(
-              label: 'Login',
-              onPressed: _submit,
-            ),
+            child: PrimaryButton(label: 'Login', onPressed: _submit),
           ),
           Padding(
             padding: EdgeInsets.only(top: 30.7.h),

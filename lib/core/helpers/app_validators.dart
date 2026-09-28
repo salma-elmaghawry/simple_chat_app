@@ -1,4 +1,3 @@
-
 class AppValidators {
   static String? validateName(String? value) {
     if (value == null || value.trim().isEmpty) {

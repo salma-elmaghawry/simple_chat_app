@@ -1,0 +1,44 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "easy-chat-e88a9",
+          "appId": "1:475695758483:android:0249359269faad78c0a166",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "easy-chat-e88a9",
+          "appId": "1:475695758483:ios:f3a43c4862890934c0a166",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "easy-chat-e88a9",
+          "appId": "1:475695758483:ios:f3a43c4862890934c0a166",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "easy-chat-e88a9",
+          "configurations": {
+            "android": "1:475695758483:android:0249359269faad78c0a166",
+            "ios": "1:475695758483:ios:f3a43c4862890934c0a166",
+            "macos": "1:475695758483:ios:f3a43c4862890934c0a166",
+            "web": "1:475695758483:web:9c46fd839a16acc1c0a166",
+            "windows": "1:475695758483:web:083b14ffdbe4d1b8c0a166"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  }
+}
