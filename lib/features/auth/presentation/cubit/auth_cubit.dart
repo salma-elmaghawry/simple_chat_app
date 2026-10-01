@@ -14,10 +14,10 @@ class AuthCubit extends Cubit<AuthState> {
   late final FirebaseAuth auth = FirebaseAuth.instance;
 
   // error message from firebase
-  String firebaseErrorMessage(String code) {
-    switch (code) {
+  String firebaseErrorMessage(String message) {
+    switch (message) {
       case 'weak-password':
-        return 'The password is too weak.';
+        return 'The password is too weak it must be at least 6 characters.';
       case 'email-already-in-use':
         return 'This email is already registered.';
       case 'invalid-email':
@@ -55,12 +55,8 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     try {
       emit(AuthLoading());
-
       final UserCredential credential = await auth
-          .createUserWithEmailAndPassword(
-            email: email.trim(),
-            password: password.trim(),
-          );
+          .createUserWithEmailAndPassword(email: email, password: password);
 
       final User? user = credential.user;
 

@@ -3,7 +3,6 @@ class UserModel {
   final String password;
   final String name;
   final String uid;
-
   final String? image;
 
   UserModel({
