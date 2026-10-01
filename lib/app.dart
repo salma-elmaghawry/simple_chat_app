@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:simple_chat_app/core/routes/app_router.dart';
+import 'package:simple_chat_app/core/routes/routes.dart';
 import 'package:simple_chat_app/core/theme/app_theme.dart';
 import 'package:simple_chat_app/features/auth/presentation/cubit/auth_cubit.dart';
 
 class SimpleChatApp extends StatefulWidget {
-  /// Only tests pass this, to use a fake. The app uses FirebaseAuth.instance.
   final FirebaseAuth? auth;
 
   const SimpleChatApp({super.key, this.auth});
@@ -44,6 +44,8 @@ class _SimpleChatAppState extends State<SimpleChatApp> {
   @override
   Widget build(BuildContext context) {
     final router = AppRouter();
+    final User? currentUser =
+        (widget.auth ?? FirebaseAuth.instance).currentUser;
 
     return BlocProvider(
       create: (_) => AuthCubit(),
@@ -56,6 +58,12 @@ class _SimpleChatAppState extends State<SimpleChatApp> {
             darkTheme: AppTheme.dark,
             themeMode: ThemeMode.system,
             debugShowCheckedModeBanner: false,
+            // A signed-in user goes to Home, everyone else starts at Intro.
+            // We also check emailVerified, because creating an account signs
+            // the user in before they verify their email.
+            initialRoute: currentUser != null && currentUser.emailVerified
+                ? Routes.home
+                : Routes.intro,
             onGenerateRoute: router.generateRoute,
             onUnknownRoute: (settings) {
               return MaterialPageRoute(

@@ -22,7 +22,6 @@ analyzer:
     - lib/core/helpers/errors.dart
     - lib/features/auth/data/auth_service.dart
     - lib/features/auth/presentation/screens/verify_email_screen.dart
-    - lib/features/home/**
     - test/features/auth/auth_cubit_test.dart
     - test/features/auth/auth_flow_test.dart
     - test/core/routes/initial_route_test.dart

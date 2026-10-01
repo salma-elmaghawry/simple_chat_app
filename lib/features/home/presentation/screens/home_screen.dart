@@ -1,57 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:simple_chat_app/core/helpers/extensions.dart';
 import 'package:simple_chat_app/core/helpers/spacing.dart';
-import 'package:simple_chat_app/core/routes/routes.dart';
-import 'package:simple_chat_app/core/widgets/primary_button.dart';
-import 'package:simple_chat_app/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:simple_chat_app/features/profile/presentation/screens/profile_screen.dart';
 
-/// Placeholder landing screen for signed-in users. Replace with the chat list.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final user = context.read<AuthCubit>().currentUser;
-    final name = user?.displayName?.trim();
-    final greeting = (name != null && name.isNotEmpty)
-        ? 'Welcome, $name'
-        : 'Welcome';
+    final theme = Theme.of(context);
 
-    return BlocListener<AuthCubit, AuthState>(
-      listener: (context, state) {
-        if (state is AuthLoggedOut) {
-          context.pushNamedAndRemoveUntil(
-            Routes.login,
-            predicate: (_) => false,
-          );
-        } else if (state is AuthError) {
-          context.showSnackBar(state.message, isError: true);
-        }
-      },
+    return DefaultTabController(
+      length: 3,
       child: Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(greeting, style: textTheme.headlineMedium),
-                if (user?.email != null) ...[
-                  verticalSpace(8),
-                  Text(user!.email!, style: textTheme.bodyLarge),
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 0,
+          title: Text('Easy Chat', style: theme.textTheme.headlineMedium),
+        ),
+        body: Column(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: TabBar(
+                overlayColor: WidgetStateProperty.all(Colors.transparent),
+                splashFactory: NoSplash.splashFactory,
+                labelColor: theme.colorScheme.primary,
+                labelStyle: theme.textTheme.titleLarge,
+                unselectedLabelStyle: theme.textTheme.bodyLarge,
+                indicatorColor: theme.colorScheme.primary,
+                indicatorWeight: 2,
+                indicatorSize: TabBarIndicatorSize.label,
+                dividerColor: Colors.transparent,
+                tabs: const [
+                  Tab(text: 'Chats'),
+                  Tab(text: 'Search'),
+                  Tab(text: 'Profile'),
                 ],
-                verticalSpace(40),
-                BlocBuilder<AuthCubit, AuthState>(
-                  builder: (context, state) => PrimaryButton(
-                    label: 'Logout',
-                    isLoading: state is AuthLoading,
-                    onPressed: () => context.read<AuthCubit>().logout(),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            verticalSpace(20),
+            const Expanded(
+              child: TabBarView(
+                children: [
+                  // Chats and Search come in the next sessions.
+                  Center(child: Text('Chats')),
+                  Center(child: Text('Search')),
+                  ProfileScreen(),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -4,7 +4,9 @@ import 'package:simple_chat_app/core/helpers/spacing.dart';
 import 'package:simple_chat_app/core/utils/app_assets.dart';
 
 class SocialLoginRow extends StatelessWidget {
-  const SocialLoginRow({super.key});
+  final VoidCallback? onGoogleTap;
+
+  const SocialLoginRow({super.key, this.onGoogleTap});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,11 @@ class SocialLoginRow extends StatelessWidget {
       children: [
         Image.asset(AppAssets.facebook, width: 44.w),
         horizontalSpace(19.5),
-        Image.asset(AppAssets.google, width: 35.w),
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: onGoogleTap,
+          child: Image.asset(AppAssets.google, width: 35.w),
+        ),
       ],
     );
   }
