@@ -97,7 +97,7 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthError(message: 'Login failed. Please try again.'));
         return;
       }
-
+      // Refresh the user data to ensure we have the latest information
       await loggedInUser.reload();
 
       final User? currentUser = auth.currentUser;
@@ -106,7 +106,7 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthError(message: 'User not found. Please try again.'));
         return;
       }
-
+      // to ensure the user has verified their email before proceeding
       if (!currentUser.emailVerified) {
         emit(AuthEmailNotVerified(user: currentUser));
         return;
@@ -138,7 +138,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthError(message: 'Something went wrong. Please try again.'));
     }
   }
-
+// Google Sign-In
   bool isGoogleSignInInitialized = false;
   Future<void> initializeGoogleSignIn() async {
     if (isGoogleSignInInitialized) return;
@@ -147,6 +147,8 @@ class AuthCubit extends Cubit<AuthState> {
 
     isGoogleSignInInitialized = true;
   }
+  
+  // Get or create a user in Firestore based on Google Sign-In
 
   Future<UserModel> getOrCreateGoogleUser(User user) async {
     final DocumentReference userRef = FirebaseFirestore.instance
@@ -212,7 +214,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthError(message: 'Google login failed. Please try again.'));
     }
   }
-
+  //<< -- reset password -- >>
   Future<void> resetPassword({required String email}) async {
     try {
       emit(AuthLoading());
@@ -226,6 +228,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthError(message: 'Something went wrong. Please try again.'));
     }
   }
+  //<< -- signout  -- >>
 
   Future<void> signOut() async {
     try {

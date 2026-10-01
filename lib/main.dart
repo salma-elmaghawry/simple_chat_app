@@ -9,7 +9,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await CacheHelper.init();
-  // Copy these two values from your Supabase project's Connect dialog.
   await Supabase.initialize(
     url: 'https://ageernnydpcalyjnoibf.supabase.co',
     publishableKey: 'sb_publishable_UkjpWE6Kyrzgh6LLHFOpeg_asJQ7f60',

@@ -20,12 +20,13 @@ class SimpleChatApp extends StatefulWidget {
 }
 
 class _SimpleChatAppState extends State<SimpleChatApp> {
+  late final FirebaseAuth _auth;
   late final StreamSubscription<User?> _authSubscription;
 
   @override
   void initState() {
-    final auth = widget.auth ?? FirebaseAuth.instance;
-    _authSubscription = auth.authStateChanges().listen((User? user) {
+    _auth = widget.auth ?? FirebaseAuth.instance;
+    _authSubscription = _auth.authStateChanges().listen((User? user) {
       if (user == null) {
         log('User is currently signed out!');
       } else {
@@ -44,8 +45,7 @@ class _SimpleChatAppState extends State<SimpleChatApp> {
   @override
   Widget build(BuildContext context) {
     final router = AppRouter();
-    final User? currentUser =
-        (widget.auth ?? FirebaseAuth.instance).currentUser;
+    final User? currentUser = _auth.currentUser;
 
     return BlocProvider(
       create: (_) => AuthCubit(),
@@ -58,9 +58,7 @@ class _SimpleChatAppState extends State<SimpleChatApp> {
             darkTheme: AppTheme.dark,
             themeMode: ThemeMode.system,
             debugShowCheckedModeBanner: false,
-            // A signed-in user goes to Home, everyone else starts at Intro.
-            // We also check emailVerified, because creating an account signs
-            // the user in before they verify their email.
+   
             initialRoute: currentUser != null && currentUser.emailVerified
                 ? Routes.home
                 : Routes.intro,
