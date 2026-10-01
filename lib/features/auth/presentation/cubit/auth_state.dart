@@ -16,3 +16,10 @@ final class AuthSuccess extends AuthState {
   final User user;
   AuthSuccess({required this.user});
 }
+
+final class AuthEmailNotVerified extends AuthState {
+  final User user;
+  AuthEmailNotVerified({required this.user});
+}
+
+final class AuthPasswordResetSent extends AuthState {}

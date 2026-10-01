@@ -42,6 +42,10 @@ dependencies:
   pretty_dio_logger: ^1.4.0
   cloud_firestore: ^6.10.0
   modal_progress_hud_nsn: ^0.5.1
+  shared_preferences: ^2.5.5
+  google_sign_in: ^7.2.0
+  supabase_flutter: ^2.18.0
+  image_picker: ^1.2.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:simple_chat_app/core/routes/app_router.dart';
+import 'package:simple_chat_app/core/routes/routes.dart';
 import 'package:simple_chat_app/core/theme/app_theme.dart';
 import 'package:simple_chat_app/features/auth/presentation/cubit/auth_cubit.dart';
 
 class SimpleChatApp extends StatefulWidget {
-  /// Only tests pass this, to use a fake. The app uses FirebaseAuth.instance.
   final FirebaseAuth? auth;
 
   const SimpleChatApp({super.key, this.auth});
@@ -20,12 +20,13 @@ class SimpleChatApp extends StatefulWidget {
 }
 
 class _SimpleChatAppState extends State<SimpleChatApp> {
+  late final FirebaseAuth _auth;
   late final StreamSubscription<User?> _authSubscription;
 
   @override
   void initState() {
-    final auth = widget.auth ?? FirebaseAuth.instance;
-    _authSubscription = auth.authStateChanges().listen((User? user) {
+    _auth = widget.auth ?? FirebaseAuth.instance;
+    _authSubscription = _auth.authStateChanges().listen((User? user) {
       if (user == null) {
         log('User is currently signed out!');
       } else {
@@ -44,6 +45,7 @@ class _SimpleChatAppState extends State<SimpleChatApp> {
   @override
   Widget build(BuildContext context) {
     final router = AppRouter();
+    final User? currentUser = _auth.currentUser;
 
     return BlocProvider(
       create: (_) => AuthCubit(),
@@ -56,6 +58,10 @@ class _SimpleChatAppState extends State<SimpleChatApp> {
             darkTheme: AppTheme.dark,
             themeMode: ThemeMode.system,
             debugShowCheckedModeBanner: false,
+   
+            initialRoute: currentUser != null && currentUser.emailVerified
+                ? Routes.home
+                : Routes.intro,
             onGenerateRoute: router.generateRoute,
             onUnknownRoute: (settings) {
               return MaterialPageRoute(
