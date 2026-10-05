@@ -50,7 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               CircleAvatar(
                 radius: 67.r,
                 backgroundImage: image == null
-                    ? const AssetImage(AppAssets.avatar)
+                    ? const AssetImage("assets/images/avatar.png")
                     : NetworkImage(image),
               ),
               UserInfoColumnWidget(

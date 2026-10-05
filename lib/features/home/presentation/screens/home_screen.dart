@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_chat_app/core/helpers/spacing.dart';
 import 'package:simple_chat_app/features/profile/presentation/screens/profile_screen.dart';
+import 'package:simple_chat_app/features/search/presentation/screens/search_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -42,9 +43,9 @@ class HomeScreen extends StatelessWidget {
             const Expanded(
               child: TabBarView(
                 children: [
-                  // Chats and Search come in the next sessions.
+                  // Chats comes in the next session.
                   Center(child: Text('Chats')),
-                  Center(child: Text('Search')),
+                  SearchScreen(),
                   ProfileScreen(),
                 ],
               ),
