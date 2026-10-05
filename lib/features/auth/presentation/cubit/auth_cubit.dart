@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -37,10 +39,35 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> saveUserData(UserModel userModel) async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userModel.uid)
-        .set(userModel.toJson(), SetOptions(merge: true));
+    try {
+      // Lowercase copy of the name, used only by the search query.
+      String searchName = userModel.name.toLowerCase().trim();
+      Map<String, dynamic> userJson = userModel.toJson();
+      userJson['searchName'] = searchName;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userModel.uid)
+          .set(userJson, SetOptions(merge: true));
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  // Accounts created before search existed have no searchName,
+  // so they never show up in search. Add it the next time they log in.
+  Future<void> addMissingSearchName(DocumentSnapshot userDoc) async {
+    try {
+      final Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
+      if (data['searchName'] != null) return;
+
+      final String name = data['name'] as String? ?? '';
+      await userDoc.reference.update({
+        'searchName': name.toLowerCase().trim(),
+      });
+    } catch (e) {
+      // Don't block the login if this fails.
+      log(e.toString());
+    }
   }
 
   Future<void> registerWithEmailAndPassword({
@@ -122,6 +149,8 @@ class AuthCubit extends Cubit<AuthState> {
         return;
       }
 
+      await addMissingSearchName(userDoc);
+
       final UserModel userModel = UserModel.fromJson(
         userDoc.data() as Map<String, dynamic>,
       );
@@ -156,8 +185,9 @@ class AuthCubit extends Cubit<AuthState> {
         .doc(user.uid);
 
     final DocumentSnapshot userDoc = await userRef.get();
-
+     // get 
     if (userDoc.exists) {
+      await addMissingSearchName(userDoc);
       return UserModel.fromJson(userDoc.data() as Map<String, dynamic>);
     }
 
@@ -169,7 +199,11 @@ class AuthCubit extends Cubit<AuthState> {
       uid: user.uid,
     );
 
-    await userRef.set(userModel.toJson());
+    String searchName = userModel.name.toLowerCase().trim();
+    Map<String, dynamic> userJson = userModel.toJson();
+    userJson['searchName'] = searchName;
+
+    await userRef.set(userJson);
 
     return userModel;
   }

@@ -95,6 +95,8 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       if (name.trim().isNotEmpty) {
         updatedData['name'] = name.trim();
+        // Keep search working after a rename.
+        updatedData['searchName'] = name.trim().toLowerCase();
       }
 
       if (imageFile != null) {

@@ -34,7 +34,8 @@ class CacheHelper {
 
     return UserModel.fromJson(userMap);
   }
-
+   
+   // Clear all data from SharedPreferences
   static Future<bool> clearData() async {
     return await sharedPreferences.clear();
   }

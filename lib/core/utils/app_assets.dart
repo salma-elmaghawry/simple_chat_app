@@ -1,8 +1,9 @@
 class AppAssets {
   static const String _images = 'assets/images';
 
-  static const String avatar = '$_images/avatar.png';
-  static const String intro = '$_images/intro.png';
-  static const String facebook = '$_images/facebook.png';
-  static const String google = '$_images/google.png';
+  static const String avatar = 'assets/images/avatar.png';
+  static const String intro = 'assets/images/intro.png';
+  static const String facebook = 'assets/images/facebook.png';
+  static const String google = 'assets/images/google.png';
+
 }
