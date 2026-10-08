@@ -28,7 +28,7 @@ class SearchCubit extends Cubit<SearchState> {
   //<< -- start a new search -- >>
   Future<void> searchUsers({required String value}) async {
     final searchText = value.trim().toLowerCase();
-    final requestID = ++searchRequestId;
+    final requestID = ++searchRequestId; 
     if (searchText.isEmpty) {
       currentSearchText = "";
       users.clear();
@@ -62,6 +62,7 @@ class SearchCubit extends Cubit<SearchState> {
 
       final currentUserId = FirebaseAuth.instance.currentUser?.uid;
       final firstPageUsers = snapshot.docs
+      //if you search for users, you don't want to include yourself in the results
           .where((document) => document.id != currentUserId)
           .map(
             (document) =>
