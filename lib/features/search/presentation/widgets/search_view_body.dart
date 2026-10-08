@@ -48,7 +48,7 @@ class _SearchViewBodyState extends State<SearchViewBody>
   void _onSearchChanged(String value) {
     debounce?.cancel();
 
-    // If the user cleared the text, clear the results right away.
+    // If the user cleared the text, the results right away.
     if (value.trim().isEmpty) {
       context.read<SearchCubit>().searchUsers(value: value);
       return;
