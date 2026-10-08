@@ -85,7 +85,7 @@ class ChatListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  formatTime(chat.lastMessageAt),
+                  formatChatListDate(chat.lastMessageAt),
                   style: AppTextStyles.font11Normal,
                 ),
                 if (unread > 0) ...[

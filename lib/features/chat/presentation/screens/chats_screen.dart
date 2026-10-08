@@ -14,9 +14,8 @@ class ChatsScreen extends StatelessWidget {
         final myId = context.read<ChatsCubit>().myId;
 
         return switch (state) {
-          ChatsInitial() || ChatsLoading() => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          ChatsInitial() ||
+          ChatsLoading() => const Center(child: CircularProgressIndicator()),
           ChatsEmpty() => const Center(
             child: Text('No chats yet, search for someone to talk to'),
           ),

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:simple_chat_app/core/helpers/date_formatter.dart';
 import 'package:simple_chat_app/core/helpers/extensions.dart';
 import 'package:simple_chat_app/features/auth/data/models/user_model.dart';
 import 'package:simple_chat_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:simple_chat_app/features/chat/presentation/widgets/chat_app_bar.dart';
+import 'package:simple_chat_app/features/chat/presentation/widgets/date_header.dart';
 import 'package:simple_chat_app/features/chat/presentation/widgets/message_bubble.dart';
 import 'package:simple_chat_app/features/chat/presentation/widgets/message_input.dart';
 
@@ -46,10 +48,26 @@ class ChatScreen extends StatelessWidget {
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
                       final message = messages[index];
-                      return MessageBubble(
+                      // The list is reversed, so index + 1 is the older
+                      // message. A new day starts when its date differs.
+                      final isFirstOfDay =
+                          index == messages.length - 1 ||
+                          !isSameDay(
+                            message.createdAt,
+                            messages[index + 1].createdAt,
+                          );
+                      final bubble = MessageBubble(
                         message: message,
                         isMe: message.senderID == myId,
                         isRead: message.readBy.contains(otherUser.uid),
+                      );
+                      if (!isFirstOfDay) return bubble;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          DateHeader(label: formatDayHeader(message.createdAt)),
+                          bubble,
+                        ],
                       );
                     },
                   ),

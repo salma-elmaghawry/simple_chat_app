@@ -76,6 +76,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   indicatorWeight: 2,
                   indicatorSize: TabBarIndicatorSize.label,
                   dividerColor: Colors.transparent,
+                  // Close the Search keyboard when moving to another tab.
+                  onTap: (_) => FocusManager.instance.primaryFocus?.unfocus(),
                   tabs: const [
                     Tab(text: 'Chats'),
                     Tab(text: 'Search'),

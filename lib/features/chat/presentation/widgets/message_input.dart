@@ -39,7 +39,11 @@ class _MessageInputState extends State<MessageInput> {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, -2)),
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 8,
+            offset: Offset(0, -2),
+          ),
         ],
       ),
       // SafeArea so the field isn't hidden behind the iPhone home bar.

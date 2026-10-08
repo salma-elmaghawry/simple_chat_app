@@ -34,17 +34,14 @@ class ChatCubit extends Cubit<ChatState> {
     messagesSubscription = messagesRef
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .listen(
-          (snapshot) {
-            final messages = snapshot.docs
-                .map((doc) => MessageModel.fromJson(doc.data(), doc.id))
-                .toList();
+        .listen((snapshot) {
+          final messages = snapshot.docs
+              .map((doc) => MessageModel.fromJson(doc.data(), doc.id))
+              .toList();
 
-            emit(ChatSuccess(messages: messages));
-            markAsRead(messages);
-          },
-          onError: (error) => emit(ChatFailure(message: error.toString())),
-        );
+          emit(ChatSuccess(messages: messages));
+          markAsRead(messages);
+        }, onError: (error) => emit(ChatFailure(message: error.toString())));
   }
 
   //<< -- send a message -- >>

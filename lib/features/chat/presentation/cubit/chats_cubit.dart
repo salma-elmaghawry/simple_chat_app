@@ -33,44 +33,39 @@ class ChatsCubit extends Cubit<ChatsState> {
         .where('participants', arrayContains: myId)
         .orderBy('lastMessageAt', descending: true)
         .snapshots()
-        .listen(
-          (snapshot) async {
-            final chats = snapshot.docs
-                .map((doc) => ChatModel.fromJson(doc.data(), doc.id))
-                .toList();
+        .listen((snapshot) async {
+          final chats = snapshot.docs
+              .map((doc) => ChatModel.fromJson(doc.data(), doc.id))
+              .toList();
 
-            if (chats.isEmpty) {
-              emit(ChatsEmpty());
-              return;
-            }
+          if (chats.isEmpty) {
+            emit(ChatsEmpty());
+            return;
+          }
 
-            // Fetch only the users we don't have yet, all at the same time.
-            final missingIds = chats
-                .map((chat) => chat.otherUserId(myId))
-                .where((id) => !usersCache.containsKey(id))
-                .toSet();
+          // Fetch only the users we don't have yet, all at the same time.
+          final missingIds = chats
+              .map((chat) => chat.otherUserId(myId))
+              .where((id) => !usersCache.containsKey(id))
+              .toSet();
 
-            await Future.wait(
-              missingIds.map((id) async {
-                final doc = await firestore.collection('users').doc(id).get();
-                if (doc.exists) {
-                  usersCache[id] = UserModel.fromJson({
-                    ...doc.data()!,
-                    'uid': doc.id,
-                  });
-                }
-              }),
-            );
+          await Future.wait(
+            missingIds.map((id) async {
+              final doc = await firestore.collection('users').doc(id).get();
+              if (doc.exists) {
+                usersCache[id] = UserModel.fromJson({
+                  ...doc.data()!,
+                  'uid': doc.id,
+                });
+              }
+            }),
+          );
 
-            // The cubit may have closed while we were waiting.
-            if (isClosed) return;
+          // The cubit may have closed while we were waiting.
+          if (isClosed) return;
 
-            emit(
-              ChatsSuccess(chats: chats, users: Map.unmodifiable(usersCache)),
-            );
-          },
-          onError: (error) => emit(ChatsFailure(message: error.toString())),
-        );
+          emit(ChatsSuccess(chats: chats, users: Map.unmodifiable(usersCache)));
+        }, onError: (error) => emit(ChatsFailure(message: error.toString())));
   }
 
   @override

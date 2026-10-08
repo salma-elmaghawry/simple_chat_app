@@ -49,8 +49,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                       .doc(user.uid)
                       .snapshots(),
                   builder: (context, snapshot) {
-                    final isOnline =
-                        snapshot.data?.data()?['isOnline'] == true;
+                    final isOnline = snapshot.data?.data()?['isOnline'] == true;
                     return Text(
                       isOnline ? 'Online' : 'Offline',
                       style: AppTextStyles.font11Normal.copyWith(
