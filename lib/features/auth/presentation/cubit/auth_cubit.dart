@@ -268,6 +268,15 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       emit(AuthLoading());
 
+      // Go offline first: after signOut there is no uid to write with.
+      final uid = auth.currentUser?.uid;
+      if (uid != null) {
+        await FirebaseFirestore.instance.collection('users').doc(uid).update({
+          'isOnline': false,
+          'lastSeen': FieldValue.serverTimestamp(),
+        });
+      }
+
       await GoogleSignIn.instance.signOut();
 
       await auth.signOut();
