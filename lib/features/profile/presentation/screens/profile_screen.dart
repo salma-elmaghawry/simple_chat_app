@@ -40,7 +40,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final String? image = userModel?.image;
 
-    return Padding(
+    // Scrollable, so the options don't overflow when the keyboard
+    // is open or the screen is short.
+    return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: 20.w).copyWith(top: 17.h),
       child: Column(
         children: [
