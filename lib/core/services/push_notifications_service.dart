@@ -31,11 +31,13 @@ class PushNotificationsService {
     importance: Importance.high,
   );
 
+  // Everyone who logs in gets the messages sent to this topic.
+  static const String announcementsTopic = 'announcements';
+
   //<< -- call once in main() -- >>
   static Future<void> init() async {
-
-
-    // Android doesn't, so we show it ourselves with flutter_local_notifications.
+    // While the app is open, Android doesn't show FCM notifications,
+    // so we show them ourselves with flutter_local_notifications.
     if (Platform.isAndroid) {
       await localNotifications.initialize(
         settings: const InitializationSettings(
@@ -77,6 +79,9 @@ class PushNotificationsService {
       // The app was closed and the user opened it by tapping a notification.
       final RemoteMessage? initialMessage = await messaging.getInitialMessage();
       if (initialMessage != null) openChat(initialMessage.data);
+
+      // Join the topic, so messages sent to it reach this phone too.
+      await messaging.subscribeToTopic(announcementsTopic);
     } catch (e) {
       // Don't block the app if notifications fail (e.g. iOS simulator).
       log(e.toString());
@@ -93,11 +98,16 @@ class PushNotificationsService {
     });
   }
 
+  //<< -- call on logout: stop getting the topic's messages -- >>
+  static Future<void> unsubscribeFromTopics() =>
+      messaging.unsubscribeFromTopic(announcementsTopic);
+
   //<< -- show a notification while the app is open (Android) -- >>
   static void showForegroundNotification(RemoteMessage message) {
     final RemoteNotification? notification = message.notification;
     if (notification == null || !Platform.isAndroid) return;
-    if (message.data['chatId'] == openChatId) return;
+    // openChatId is null when no chat is open, so check it first.
+    if (openChatId != null && message.data['chatId'] == openChatId) return;
 
     localNotifications.show(
       id: notification.hashCode,
@@ -119,7 +129,9 @@ class PushNotificationsService {
   //<< -- on tap: open the chat with the person who sent the message -- >>
   static Future<void> openChat(Map<String, dynamic> data) async {
     final String? senderId = data['senderId'] as String?;
-    if (senderId == null || data['chatId'] == openChatId) return;
+    if (senderId == null) return;
+    // Already inside this chat, no need to open it again.
+    if (openChatId != null && data['chatId'] == openChatId) return;
 
     final userDoc = await FirebaseFirestore.instance
         .collection('users')

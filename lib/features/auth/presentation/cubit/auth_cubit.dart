@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simple_chat_app/core/helpers/cache_helper.dart';
+import 'package:simple_chat_app/core/services/push_notifications_service.dart';
 import 'package:simple_chat_app/features/auth/data/models/user_model.dart';
 
 part 'auth_state.dart';
@@ -277,6 +278,8 @@ class AuthCubit extends Cubit<AuthState> {
           'fcmToken': FieldValue.delete(),
         });
       }
+
+      await PushNotificationsService.unsubscribeFromTopics();
 
       await GoogleSignIn.instance.signOut();
 
