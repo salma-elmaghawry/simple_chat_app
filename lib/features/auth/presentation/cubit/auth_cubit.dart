@@ -274,6 +274,7 @@ class AuthCubit extends Cubit<AuthState> {
         await FirebaseFirestore.instance.collection('users').doc(uid).update({
           'isOnline': false,
           'lastSeen': FieldValue.serverTimestamp(),
+          'fcmToken': FieldValue.delete(),
         });
       }
 
