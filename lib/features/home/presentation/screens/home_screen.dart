@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simple_chat_app/core/helpers/spacing.dart';
+import 'package:simple_chat_app/core/services/push_notifications_service.dart';
 import 'package:simple_chat_app/features/chat/presentation/cubit/chats_cubit.dart';
 import 'package:simple_chat_app/features/chat/presentation/screens/chats_screen.dart';
 import 'package:simple_chat_app/features/profile/presentation/screens/profile_screen.dart';
@@ -23,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     setOnline(true);
+    PushNotificationsService.setupForUser();
   }
 
   // resumed = app on screen, anything else = in the background.

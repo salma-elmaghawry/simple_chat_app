@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:simple_chat_app/core/services/push_notifications_service.dart';
 import 'package:simple_chat_app/features/auth/data/models/user_model.dart';
 import 'package:simple_chat_app/features/chat/data/models/chat_model.dart';
 import 'package:simple_chat_app/features/chat/data/models/message_model.dart';
@@ -29,6 +30,7 @@ class ChatCubit extends Cubit<ChatState> {
   //<< -- listen to messages in real time -- >>
   void listenToMessages() {
     emit(ChatLoading());
+    PushNotificationsService.openChatId = chatId;
 
     // snapshots() is a Stream: it fires again on every new or changed message.
     messagesSubscription = messagesRef
@@ -120,6 +122,7 @@ class ChatCubit extends Cubit<ChatState> {
   @override
   Future<void> close() {
     messagesSubscription?.cancel();
+    PushNotificationsService.openChatId = null;
     return super.close();
   }
 }
